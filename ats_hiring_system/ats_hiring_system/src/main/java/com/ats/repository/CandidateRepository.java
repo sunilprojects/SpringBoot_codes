@@ -15,7 +15,8 @@ public interface CandidateRepository extends JpaRepository<Candidate, Long> {
    
    //get candidate by job id
 	List<Candidate> findByJobId(Long jobId);
-	// passing mapped name entity job
+	
+	// checks email and job in repository
 	boolean existsByEmailAndJob(String email,Job job);
 	boolean existsByPhoneNumber(String phone);
 	

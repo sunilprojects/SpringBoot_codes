@@ -16,11 +16,11 @@ public class RecruiterService {
 	private RecruiterRepository recruiterRepository;
 
 	public Recruiter saveRecruiter(Recruiter recruiter) {
-		 boolean  present= recruiterRepository.existsByOfficialEmailAndMobileNumber(recruiter.getOfficialEmail(),recruiter.getMobileNumber());
-		 if(present) {
-			 throw new RecruiterException("Recruiter cannot be created change your credentials");
-		 }
-			 return recruiterRepository.save(recruiter);
+		boolean  present= recruiterRepository.existsByOfficialEmailAndMobileNumber(recruiter.getOfficialEmail(),recruiter.getMobileNumber());
+		if(present) {
+			throw new RecruiterException("Recruiter cannot be created change your credentials");
+		}
+		return recruiterRepository.save(recruiter);
 	}
 
 	public List<Recruiter> gettingAllRecruiters() {
@@ -28,10 +28,10 @@ public class RecruiterService {
 	}
 
 	public Recruiter getRecruiter(Long id) {
-	return recruiterRepository.findById(id)
-			.orElseThrow(() -> new RuntimeException(" Id is not found: " + id));
-		
+		return recruiterRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException(" Id is not found: " + id));
+
 	}
-	
-	
+
+
 }

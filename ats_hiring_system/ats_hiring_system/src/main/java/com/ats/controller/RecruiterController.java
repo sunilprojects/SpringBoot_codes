@@ -23,21 +23,18 @@ public class RecruiterController {
     @PostMapping
     public Recruiter createRecruiter(@RequestBody Recruiter recruiter) {
        return recruiterService.saveRecruiter(recruiter);
-//     return ResponseEntity.ok("recruiter is created :"+ " " +recruiter.getId());
     }
-
 
     @GetMapping
     public List<Recruiter> getAllRecruiters() {
-//        return recruiterRepository.findAll();
     	return recruiterService.gettingAllRecruiters();
     }
 
     @GetMapping("/{id}")
     public Recruiter getRecruiterById(@PathVariable Long id) {
-//        return recruiterRepository.findById(id).orElse(null);
     	return recruiterService.getRecruiter(id);
     }
+    
     @GetMapping("/count")
     public ResponseEntity<String> getCount(){
     	long count=recruiterRepository.count();

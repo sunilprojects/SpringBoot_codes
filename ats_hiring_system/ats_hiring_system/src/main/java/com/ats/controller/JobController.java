@@ -55,4 +55,10 @@ public class JobController {
     public void deleteJob(@PathVariable Long id) {
     	 jobService.deletingId(id);
     }
+    
+    @GetMapping("/count")
+    public ResponseEntity<String> getCount(){
+    	long count=jobRepository.count();
+    	return ResponseEntity.ok("Total jobPosts :"+count);
+    }
 }

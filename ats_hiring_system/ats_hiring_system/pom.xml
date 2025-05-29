@@ -70,6 +70,18 @@
             <scope>test</scope>
         </dependency>
 
+
+      <dependency>
+    <groupId>org.apache.tika</groupId>
+    <artifactId>tika-core</artifactId>
+    <version>2.9.0</version>
+</dependency>
+<dependency>
+    <groupId>org.apache.tika</groupId>
+    <artifactId>tika-parsers-standard-package</artifactId>
+    <version>2.9.0</version>
+</dependency>
+
         <!-- Swagger UI (optional: uncomment to use Swagger) -->
         <!--
         <dependency>
@@ -110,6 +122,7 @@
 
     <!-- Oracle Repository (only required for ojdbc if not in local repo) -->
     <repositories>
+    
         <repository>
             <id>oracle</id>
             <url>https://maven.oracle.com</url>

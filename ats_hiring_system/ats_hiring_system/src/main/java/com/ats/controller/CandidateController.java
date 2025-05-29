@@ -2,11 +2,14 @@ package com.ats.controller;
 
 
 import com.ats.dto.CandidateDTO;
+
 import com.ats.entity.Candidate;
 import com.ats.entity.Job;
 import com.ats.repository.CandidateRepository;
 import com.ats.repository.JobRepository;
 import com.ats.service.CandidateService;
+
+import jakarta.persistence.criteria.Path;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +21,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+
+
 @RestController
 @RequestMapping("/api/candidates")
 public class CandidateController {
@@ -28,15 +33,6 @@ public class CandidateController {
     private CandidateRepository candidateRepository;
     @Autowired
     private CandidateService candidateService;
-
-
-//    @PostMapping("/job/{jobId}")
-//    public Candidate createCandidate(@PathVariable Long jobId, @RequestBody Candidate candidate) {
-//      
-////        return candidateRepository.save(candidate);
-//        return candidateService.candidateCreate(jobId,candidate);
-//    }
-
     
     @PostMapping("/save/job/")
     public ResponseEntity<String>CandidateWithResume(
@@ -52,6 +48,12 @@ public class CandidateController {
             @RequestParam("Yop") long yop,
             @RequestParam("resume") MultipartFile resumeFile
     ) throws IOException {
+//    	
+//    	 String fileName = UUID.randomUUID() + "_" + resumeFile.getOriginalFilename();
+//    	    String uploadDir = "resumes/";
+
+//    	    Path filePath = Paths.get(uploadDir + fileName);
+//    	    Files.copy(resumeFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
         Candidate candidate = new Candidate();
         candidate.setFirstName(firstName);
@@ -63,34 +65,26 @@ public class CandidateController {
         candidate.setQual(highestQualification);
         candidate.setSkills(skills);
         candidate.setYearOfPassing(yop);
-
-        candidate.setResume(resumeFile.getBytes());
-
-        // Optional: Store in filesystem instead
-        /*
-        String uploadDir = "uploads/resumes/";
-        String fileName = UUID.randomUUID() + "_" + resumeFile.getOriginalFilename();
-        Path uploadPath = Paths.get(uploadDir);
-        if (!Files.exists(uploadPath)) Files.createDirectories(uploadPath);
-        Path filePath = uploadPath.resolve(fileName);
-        Files.copy(resumeFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-        candidate.setResumePath(filePath.toString());
-        */
+//        candidate.setResume(resumeFile.getBytes());
+        
+        String resumePath = candidateService.saveResumeToFileSystem(resumeFile);
+        candidate.setResumePath(resumePath);
 
         Candidate saved = candidateService.candidateCreate(jobId, candidate);
         return ResponseEntity.ok("Application Sent succesfully");
     }
-
 
     @GetMapping
      public List<CandidateDTO> getAllCandidates() {
     	
     	 return	candidateService.getAll();
      }
+    
      @GetMapping("/id/{id}")
     public Optional<Candidate> getCandidatebyId(@PathVariable Long id){
     	return candidateService.getbyId(id);
     }
+     
     @PutMapping("/{id}")
     public Candidate updateCandidate(@PathVariable long id, @RequestBody Candidate candidateDetails) {
     	return candidateService.candidateUpdate(id,candidateDetails);
@@ -105,6 +99,12 @@ public class CandidateController {
     @GetMapping("/job/{jobId}")
     public List<Candidate> getCandidatesByJob(@PathVariable Long jobId) {
         return candidateService.findCandidate(jobId);
+    }
+    
+    @GetMapping("/count")
+    public ResponseEntity<String> getCount(){
+    	long count=candidateRepository.count();
+    	return ResponseEntity.ok("Total candidates :"+count);
     }
 
 }

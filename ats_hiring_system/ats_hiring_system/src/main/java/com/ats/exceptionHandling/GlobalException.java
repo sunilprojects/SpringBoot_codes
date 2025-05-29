@@ -17,6 +17,7 @@ public class GlobalException {
 //		error.put("message", x.getMessage());
 		return new ResponseEntity<>(x.getMessage(),HttpStatus.BAD_REQUEST);
 	}
+	
 	@ExceptionHandler(RecruiterException.class)
 	public ResponseEntity<Object> recruiterExp(RecruiterException ex){
 		return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);

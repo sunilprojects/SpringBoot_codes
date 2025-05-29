@@ -6,5 +6,4 @@ public class EmailExistException extends RuntimeException {
 		super(msg);
 	}
 	
-
 }

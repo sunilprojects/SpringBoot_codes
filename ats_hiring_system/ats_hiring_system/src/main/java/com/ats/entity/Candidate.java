@@ -42,8 +42,11 @@ public class Candidate {
 	private String qual;
 	private String skills;
 	private long yearOfPassing;
-	@Lob
-	private byte[] resume;
+//	@Lob
+//	private byte[] resume;
+	
+	@Column(name="resume_path")
+	private String resumePath;
 
 	@ManyToOne // many candidates can apply to one job
 	@JoinColumn(name = "job_id") // joining foreign key column in candidate table
@@ -57,7 +60,5 @@ public class Candidate {
 
 	private ApplicationStatus status;
 
-	// Optional: Add any other details as per your ATS requirements (address,
-	// skills, etc.)
-
+	
 }
