@@ -72,6 +72,7 @@ public class CandidateController {
         // 4. Extract matched skills from resume
         List<String> matchedSkills = resumeScreenService.extractMatchingSkills(resumeText, requiredSkills);
         System.out.println("Matched Skills: " + matchedSkills);
+        System.out.println("Matched Skills: " + matchedSkills);
     	
     	
     	
