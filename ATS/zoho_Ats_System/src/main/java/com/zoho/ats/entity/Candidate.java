@@ -42,23 +42,17 @@ public class Candidate {
 	private String qual;
 	private String skills;
 	private long yearOfPassing;
-//	@Lob
-//	private byte[] resume;
-	
 	@Column(name="resume_path")
 	private String resumePath;
 
-	@ManyToOne // many candidates can apply to one job
-	@JoinColumn(name = "job_id") // joining foreign key column in candidate table
-	@JsonIgnore
-	private Job job; 
+
 
 	@OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonIgnore
 	private List<Application> applications;
 
-	@Enumerated(EnumType.STRING)
-
-	private ApplicationStatus status;
+//	@Enumerated(EnumType.STRING)
+//	private ApplicationStatus status;
 
 	
 }

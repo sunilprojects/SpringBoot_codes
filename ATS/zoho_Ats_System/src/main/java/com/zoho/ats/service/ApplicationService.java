@@ -48,7 +48,6 @@ public class ApplicationService {
 		application.setCandidate(candidate);
 		application.setJob(job);
 		application.setStatus(ApplicationStatus.APPLIED);
-		//        application.setAppliedDate(LocalDateTime.now());
 
 		return applicationRepository.save(application);
 	}
@@ -65,11 +64,12 @@ public class ApplicationService {
 	public Application updateApplicationStatus(Long applicationId, ApplicationStatus newStatus) {
 		Application application = applicationRepository.findById(applicationId)
 				.orElseThrow(() -> new NoSuchElementException("Application not found with ID: " + applicationId));
-
+            
+		System.out.println(newStatus);
 		application.setStatus(newStatus);
 
 		Candidate candidate=application.getCandidate();// output is candidate obj
-		candidate.setStatus(newStatus); // updating status in candidate entity/table
+//		candidate.setStatus(newStatus); // updating status in candidate entity/table
 		candidateRepository.save(candidate);
 
 		return applicationRepository.save(application);
@@ -124,6 +124,10 @@ public class ApplicationService {
 		}
 		return details;
 
+	}
+	// fetching total applications applied by candidate
+	public List<Application> getApplicationsByCandidateId(Long candidateId) {
+		return applicationRepository.findByCandidateId(candidateId);
 	}
 
 

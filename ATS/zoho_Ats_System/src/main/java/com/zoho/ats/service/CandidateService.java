@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.zoho.ats.dto.ApplicationDTO;
 import com.zoho.ats.dto.CandidateDTO;
+import com.zoho.ats.dto.CandidateJobApplicationDTO;
 import com.zoho.ats.dto.CandidateMatchDTO;
 import com.zoho.ats.entity.Application;
 import com.zoho.ats.entity.Candidate;
@@ -40,31 +41,44 @@ public class CandidateService {
 
 	@Autowired
 	private ApplicationRepository applicationRepository;
+	
+	public Candidate candidateCreate(long jobId, Candidate candidate) {
+	    Job job = jobRepository.findById(jobId)
+	            .orElseThrow(() -> new RuntimeException("Job not found with id: " + jobId));
 
+	    Candidate savedCandidate;// declaring a variable 
 
-	public Candidate candidateCreate(long jobId,Candidate candidate) {
-		Job job = jobRepository.findById(jobId)
-				.orElseThrow(() -> new RuntimeException("Job not found with id: " + jobId)); // fetching job object from db if not throw error
-		candidate.setJob(job);
-		// it checks the database whether this email and jobid is present are not
-		boolean alreadyApplied = candidateRepository.existsByEmailAndJob(candidate.getEmail(), job);
-		//	    	boolean phoneApplied=candidateRepository.existsByPhoneNumber(candidate.getPhoneNumber());
-		if (alreadyApplied) {
-			throw new EmailExistException("Email is already applied for this job."); // Custom Exception
-		}
-		candidate.setStatus(ApplicationStatus.APPLIED);//trigers in candidate table once candidate apply
-		//	      application.setCandidate(candidate.getId());
-		Application application= new Application();
-		Candidate savedCandidate=candidateRepository.save(candidate);
+	    //  Check if candidate already exists
+	    Optional<Candidate> existingCandidate = candidateRepository.findByEmail(candidate.getEmail());
 
-		application.setCandidate(savedCandidate);
-		application.setJob(job);
-		application.setStatus(ApplicationStatus.APPLIED);
-		application.setAppliedDate(LocalDateTime.now());// or set your date format
-		applicationRepository.save(application);
-		return savedCandidate;
+	    if (existingCandidate.isPresent()) {
+	        savedCandidate = existingCandidate.get();
+
+	        // Check if this candidate has already applied for the same job
+	        boolean alreadyApplied = applicationRepository.existsByCandidateAndJob(savedCandidate, job);
+	        if (alreadyApplied) {
+	            throw new EmailExistException("You have already applied for this job.");
+	        }
+
+	    } else {
+	        savedCandidate = candidateRepository.save(candidate);
+	        System.out.println("New Candidate Created: ID = " + savedCandidate.getId());
+	    }
+
+	    //  Save Application for this job
+	    Application application = new Application();
+	    application.setCandidate(savedCandidate);
+	    application.setJob(job);
+	    application.setStatus(ApplicationStatus.APPLIED);
+	    application.setAppliedDate(LocalDateTime.now());
+	    application.setJobRole(job.getJobRole());
+
+	    applicationRepository.save(application);
+
+	    return savedCandidate;
 	}
 
+  
 	public Optional<Candidate> getbyId(Long id) {
 		return candidateRepository.findById(id);
 	}
@@ -94,7 +108,7 @@ public class CandidateService {
 			existingCandidate.setEmail(candidateDetails.getEmail());
 			existingCandidate.setPhoneNumber(candidateDetails.getPhoneNumber());
 			existingCandidate.setResumePath(candidateDetails.getResumePath());
-			existingCandidate.setJob(candidateDetails.getJob());
+//			existingCandidate.setJob(candidateDetails.getJob());
 			return candidateRepository.save(existingCandidate);
 		} else {
 			throw new NoSuchElementException("Candidate with ID " + id + " not found.");
@@ -105,15 +119,14 @@ public class CandidateService {
 		candidateRepository.deleteById(id);
 	}
 
-	public List<Candidate> findCandidate(Long jobId) {
-		return candidateRepository.findByJobId(jobId);
-	}
+//	public List<Candidate> findCandidate(Long jobId) {
+//		return candidateRepository.findByJobId(jobId);
+//	}
 
 	// to save resumes in folder
 	public String saveResumeToFileSystem(MultipartFile resumeFile) throws IOException {
 	    String uploadDir = "resumes/";   // directory
 	    String fileName = UUID.randomUUID() + "_" + resumeFile.getOriginalFilename(); // it will generate unique code, universally unique identifiers 
-//        String fileName =  resumeFile.getOriginalFilename();  // get file name
 	    File directory = new File(uploadDir);
 	    if (!directory.exists()) {
 	        directory.mkdirs(); // Create directory if it doesn't exist
@@ -125,11 +138,23 @@ public class CandidateService {
 	    try (OutputStream os = new FileOutputStream(resume)) {
 	        os.write(resumeFile.getBytes());//Converts the uploaded resume to bytes and writes them to a new file on disk.
 	    }
-	    
 
 	    return resume.getAbsolutePath();
 	}
-
+   
+     // to get candidate application status by candidateId
+	 public List<CandidateJobApplicationDTO> getCandidateApplicationStatus(Long candidateId) {
+	List<Application> app=applicationRepository.findByCandidateId(candidateId);
+	       return app.stream().map(ap->{
+	       CandidateJobApplicationDTO dto= new CandidateJobApplicationDTO();
+	        dto.setJobTitle(ap.getJobRole());
+	        dto.setCompanyName(ap.getJob().getCompany());
+	        dto.setAppliedDate(ap.getAppliedDate());
+	        dto.setStatus(ap.getStatus());
+	        return dto;
+	       }).collect(Collectors.toList());
+	
+	 }
 
 
 }

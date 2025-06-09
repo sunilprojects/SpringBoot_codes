@@ -2,10 +2,13 @@ package com.zoho.ats.controller;
 
 
 import com.zoho.ats.dto.CandidateDTO;
+import com.zoho.ats.dto.CandidateJobApplicationDTO;
+import com.zoho.ats.entity.Application;
 import com.zoho.ats.entity.Candidate;
 import com.zoho.ats.entity.Job;
 import com.zoho.ats.repository.CandidateRepository;
 import com.zoho.ats.repository.JobRepository;
+import com.zoho.ats.service.ApplicationService;
 import com.zoho.ats.service.CandidateService;
 import com.zoho.ats.service.ResumeScreenService;
 
@@ -37,6 +40,8 @@ public class CandidateController {
     private CandidateService candidateService;
     @Autowired
     private ResumeScreenService resumeScreenService;
+    @Autowired
+    private ApplicationService applicationService;
     
     @PostMapping("/save/job/")
     public ResponseEntity<String>CandidateWithResume(
@@ -52,12 +57,6 @@ public class CandidateController {
             @RequestParam("Yop") long yop,
             @RequestParam("resume") MultipartFile resumeFile
     ) throws IOException, TikaException {
-//    	
-//    	 String fileName = UUID.randomUUID() + "_" + resumeFile.getOriginalFilename();
-//    	    String uploadDir = "resumes/";
-
-//    	    Path filePath = Paths.get(uploadDir + fileName);
-//    	    Files.copy(resumeFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
     	String resumePath = resumeScreenService.saveResumeToFileSystem(resumeFile);
 
@@ -72,11 +71,6 @@ public class CandidateController {
         // 4. Extract matched skills from resume
         List<String> matchedSkills = resumeScreenService.extractMatchingSkills(resumeText, requiredSkills);
         System.out.println("Matched Skills: " + matchedSkills);
-        System.out.println("Matched Skills: " + matchedSkills);
-    	
-    	
-    	
-    	
     	
         Candidate candidate = new Candidate();
         candidate.setFirstName(firstName);
@@ -88,13 +82,9 @@ public class CandidateController {
         candidate.setQual(highestQualification);
         candidate.setSkills(skills);
         candidate.setYearOfPassing(yop);
-//        candidate.setResume(resumeFile.getBytes());
-        
-//        String resumePath = candidateService.saveResumeToFileSystem(resumeFile);
         candidate.setResumePath(resumePath);
 
         Candidate saved = candidateService.candidateCreate(jobId, candidate);
-//        return ResponseEntity.ok("Application Sent succesfully");
         return ResponseEntity.ok("Application submitted successfully with matched skills: " + matchedSkills);
     }
     
@@ -121,15 +111,25 @@ public class CandidateController {
     	return ResponseEntity.ok("given id " +id +"is deleted");
     }
     
-    @GetMapping("/job/{jobId}")
-    public List<Candidate> getCandidatesByJob(@PathVariable Long jobId) {
-        return candidateService.findCandidate(jobId);
-    }
+//    @GetMapping("/job/{jobId}")
+//    public List<Candidate> getCandidatesByJob(@PathVariable Long jobId) {
+//        return candidateService.findCandidate(jobId);
+//    }
     
-    @GetMapping("/count")
+    @GetMapping("/count") // total candidate present in candidate table
     public ResponseEntity<String> getCount(){
     	long count=candidateRepository.count();
     	return ResponseEntity.ok("Total candidates :"+count);
+    }
+    
+    @GetMapping("/total-applications") // fetching total applications applied by candidate
+    public List<Application> getApplications(@RequestParam Long candidateId){
+    	    return applicationService.getApplicationsByCandidateId(candidateId);
+    }
+    
+    @GetMapping("/candidate/status")//to get candidate application status by candidateId
+    public List<CandidateJobApplicationDTO> getCandidateApplicationStatus(@RequestParam Long candidateId){
+    	return candidateService.getCandidateApplicationStatus(candidateId);
     }
 
 }

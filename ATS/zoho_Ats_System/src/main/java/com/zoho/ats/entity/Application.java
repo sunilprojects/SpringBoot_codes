@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.zoho.ats.enums.ApplicationStatus;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -27,12 +28,14 @@ public class Application {
 	
 	@ManyToOne 
 	@JoinColumn(name="job_id", nullable = false)
-	@JsonIgnoreProperties({"applications", "candidates", "hibernateLazyInitializer", "handler"})
+//	@JsonIgnoreProperties({"applications", "candidates", "hibernateLazyInitializer", "handler"})
+	@JsonIgnore
 	private Job job;
+	private String jobRole;
 	
 	@ManyToOne
 	@JoinColumn(name="candidate_id", nullable=false)
-	@JsonIgnoreProperties({"applications", "job", "hibernateLazyInitializer", "handler"})
+//	@JsonIgnoreProperties({"applications", "job", "hibernateLazyInitializer", "handler"})
 	private Candidate candidate;
 
 	

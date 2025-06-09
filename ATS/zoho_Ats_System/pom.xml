@@ -48,7 +48,7 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
            
-            <scope>provided</scope>
+            <scope>>provided</scope>
         </dependency>
 
         <!-- Oracle JDBC Driver -->
@@ -107,7 +107,7 @@
         -->
     </dependencies>
 
-    <build>
+   <build>
         <plugins>
             <!-- Compiler Plugin -->
             <plugin>
@@ -121,7 +121,7 @@
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
-                            <version>1.18.30</version>
+                           
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
@@ -133,7 +133,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
-    </build>
+    </build> 
 
     <!-- Oracle Repository (only required for ojdbc if not in local repo) -->
     <repositories>

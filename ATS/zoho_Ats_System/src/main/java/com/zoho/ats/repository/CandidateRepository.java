@@ -14,12 +14,10 @@ import com.zoho.ats.entity.Job;
 @Repository
 public interface CandidateRepository extends JpaRepository<Candidate, Long> {
    
-   //get candidate by job id
-	List<Candidate> findByJobId(Long jobId);
-	
-	// checks email and job in repository
-	boolean existsByEmailAndJob(String email,Job job);
+
 	boolean existsByPhoneNumber(String phone);
+
+	Optional<Candidate> findByEmail(String email);
 	
 
 

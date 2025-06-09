@@ -1,6 +1,7 @@
 package com.zoho.ats.controller;
 
 
+import com.zoho.ats.dto.RecruiterSummaryDTO;
 import com.zoho.ats.entity.Recruiter;
 import com.zoho.ats.repository.RecruiterRepository;
 import com.zoho.ats.service.RecruiterService;
@@ -39,5 +40,10 @@ public class RecruiterController {
     public ResponseEntity<String> getCount(){
     	long count=recruiterRepository.count();
     	return ResponseEntity.ok("Recruiters Registerd :"+count);
+    }
+    
+    @GetMapping("/admin/recruiters")//to get all recruiters and total job posts
+    public List<RecruiterSummaryDTO> getAllRecruitersSummary() {
+    	return recruiterRepository.getAllRecruitersSummary();
     }
 }

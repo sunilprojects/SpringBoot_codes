@@ -19,7 +19,7 @@ public class Job {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-  
+    @Column(name = "job_role")
     private String jobRole;
     private String company;
     private double Experience;
@@ -29,8 +29,7 @@ public class Job {
     private String description;
     private String Education;
    
-    @OneToMany(mappedBy = "job")// one job can apply by many candidates
-    private List<Candidate> candidates;
+
  
     @ManyToOne(fetch = FetchType.EAGER)// fetchType EAGER is default for Mto1 if u want to fetch 1 job u will get all jobs without using this
     @JoinColumn(name = "recruiter_id") // joining foreign key column in job

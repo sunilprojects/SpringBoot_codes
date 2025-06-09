@@ -1,5 +1,6 @@
 package com.zoho.ats.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.Setter;
 
 
 @Data
+@AllArgsConstructor
 public class CandidateDTO { // this is used to hide resume and and shor necessary fileds
 
 	private Long id;
@@ -20,15 +22,5 @@ public class CandidateDTO { // this is used to hide resume and and shor necessar
 	//    private Long jobId;
 
 
-	public CandidateDTO(Long id, String firstName, String lastName, String email,
-			String phoneNumber, String location, String skills) {
-		this.id = id;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-		this.phoneNumber = phoneNumber;
-		this.location = location;
-		this.skills = skills;
-	}
 
 }

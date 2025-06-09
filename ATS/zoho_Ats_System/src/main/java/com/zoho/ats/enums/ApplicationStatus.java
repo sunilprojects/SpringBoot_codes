@@ -1,8 +1,7 @@
 package com.zoho.ats.enums;
 
 public enum ApplicationStatus {
-	APPLIED,
-	UNDER_REVIEW,
-	SHORTLISTED,
-	REJECTED,
+	APPLIED, UNDER_REVIEW, SHORTLISTED, REJECTED, INTERVIEW, OFFERED, HIRED,
+	
+
 }

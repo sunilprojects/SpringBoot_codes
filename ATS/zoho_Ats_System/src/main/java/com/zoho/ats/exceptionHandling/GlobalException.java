@@ -15,7 +15,7 @@ public class GlobalException {
 	public ResponseEntity<Object> handleExp(EmailExistException x){
 //		Map<String, Object> error=new HashMap();
 //		error.put("message", x.getMessage());
-		return new ResponseEntity<>(x.getMessage(),HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(x.getMessage(),HttpStatus.NOT_ACCEPTABLE);
 	}
 	
 	@ExceptionHandler(RecruiterException.class)
