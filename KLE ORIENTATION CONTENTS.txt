@@ -1,0 +1,21 @@
+BCA INTRODUCTION AND MINDSET
+ 
+CONTENTS
+
+1.What is BCA? Scope, Structure, and Subjects
+2.Why Choose BCA? Career Opportunities
+3.Understanding Growth Mindset
+4.Digital Discipline in College Life
+5.Interactive Engagement
+6.Computer fundamentals
+7.input, output devices
+8.software vs hardware
+9.GPU
+10.Introduction to Programming
+11.What is Web Development
+12.Introduction to Git & GitHub
+13.Free Online Platforms
+14.Live Demo: Writing Your First Program or HTML Page
+15.Career Planning & Projects
+
+Q&A
